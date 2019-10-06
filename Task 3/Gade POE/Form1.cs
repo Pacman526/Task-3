@@ -73,177 +73,68 @@ namespace Gade_POE
 
             }
 
-            public void MoveUnit(Unit u, Unit closestUnit)
+            public void MoveUnit(Unit u, Unit closestUnit, int mapXSize, int mapYSize)
             {
-                for (int i = 0; i < (u.speed); i++)
+
+                if ((u.Health*100)/u.maxHealth < 25)
                 {
-                    if (((u.Health * 100) / u.maxHealth) <= 25)
+                    u.combatCheck = false;
+                    Random rnd = new Random();
+
+                    int temp = rnd.Next(0, 4);
+                    if (temp == 0)
                     {
-                        if (Math.Abs(u.xPos - closestUnit.xPos) > Math.Abs(u.yPos - closestUnit.yPos))
+                        if (u.xPos - u.speed < 0)
                         {
-                            if ((u.yPos + 1) >= 20 | (u.yPos - 1) <= 0)
-                            {
-                                if (u.xPos > closestUnit.xPos)
-                                {
-                                    if (u.xPos + 1 >= 20)
-                                    {
-                                        u.xPos =- 1;
-                                    }
-                                    else
-                                    {
-                                        u.xPos =+ 1;
-                                    }
-                                }
-                                else
-                                {
-                                    if (u.xPos - 1 <= 0)
-                                    {
-                                        u.xPos += 1;
-                                    }
-                                    else
-                                    {
-                                        u.xPos -= 1;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (u.yPos > closestUnit.yPos)
-                                {
-                                    u.yPos += 1;
-                                }
-                                else
-                                {
-                                    u.yPos -= 1;
-                                }
-                            }
 
                         }
-                        else if (Math.Abs(u.xPos - closestUnit.xPos) < Math.Abs(u.yPos - closestUnit.yPos))
-                        {
-                            if ((u.xPos + 1) >= 20 | (u.xPos - 1) <= 0)
-                            {
-                                if (u.yPos > closestUnit.yPos)
-                                {
-                                    if (u.yPos + 1 >= 20)
-                                    {
-                                        u.yPos -= 1;
-                                    }
-                                    else
-                                    {
-                                        u.yPos += 1;
-                                    }
-                                }
-                                else
-                                {
-                                    if (u.yPos - 1 <= 0)
-                                    {
-                                        u.yPos += 1;
-                                    }
-                                    else
-                                    {
-                                        u.yPos -= 1;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (u.xPos > closestUnit.xPos)
-                                {
-                                    u.xPos += 1;
-                                }
-                                else
-                                {
-                                    u.xPos -= 1;
-                                }
-                            }
-
-                        }
+                        else
+                            u.xPos = u.xPos - u.speed;
                     }
-                    else
+                    else if(temp == 1)
                     {
-                        if (Math.Abs(u.xPos - closestUnit.xPos) < Math.Abs(u.yPos - closestUnit.yPos))
+                        if (u.yPos - u.speed < 0)
                         {
 
-                            if ((u.yPos + 1) >= 20 | (u.yPos - 1) <= 0)
-                            {
-                                if (u.xPos > closestUnit.xPos)
-                                {
-                                    if (u.xPos - 1 <= 0)
-                                    {
-                                        u.xPos += 1;
-                                    }
-                                    else
-                                    {
-                                        u.xPos -= 1;
-                                    }
-                                }
-                                else
-                                {
-                                    if (u.yPos + 1 >= 20)
-                                    {
-                                        u.xPos -= 1;
-                                    }
-                                    else
-                                    {
-                                        u.yPos += 1;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (u.yPos > closestUnit.yPos)
-                                {
-                                    u.yPos -= 1;
-                                }
-                                else
-                                {
-                                    u.yPos += 1;
-                                }
-                            }
-
                         }
-                        else if (Math.Abs(u.xPos - closestUnit.xPos) < Math.Abs(u.yPos - closestUnit.yPos))
-                        {
-                            if ((u.xPos + 1) >= 20 | (u.xPos - 1) <= 0)
-                            {
-                                if (u.yPos > closestUnit.yPos)
-                                {
-                                    if (u.yPos - 1 <= 0)
-                                    {
-                                        u.yPos += 1;
-                                    }
-                                    else
-                                    {
-                                        u.yPos -= 1;
-                                    }
-
-                                }
-                                else
-                                {
-                                    if (u.yPos + 1 >= 20)
-                                    {
-                                        u.yPos -= 1;
-                                    }
-                                    else
-                                    {
-                                        u.yPos += 1;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (u.xPos > closestUnit.xPos)
-                                {
-                                    u.xPos -= 1;
-                                }
-                                else
-                                {
-                                    u.xPos += 1;
-                                }
-                            }
-                        }
+                        else
+                            u.yPos = u.yPos - u.speed;
                     }
+                    else if (temp == 2)
+                    {
+                        if (u.xPos + u.speed > mapXSize)
+                        {
+
+                        }
+                        else
+                            u.xPos = u.xPos + u.speed;
+                    }
+                    else if (temp == 3)
+                    {
+                        if (u.yPos + u.speed > mapYSize)
+                        {
+
+                        }
+                        else
+                            u.yPos = u.yPos + u.speed;
+                    }
+                }
+                else
+                if (u.xPos > closestUnit.xPos)
+                {
+                    u.xPos = u.xPos - u.speed;
+                }else
+                if (u.xPos < closestUnit.xPos)
+                {
+                    u.xPos = u.xPos + u.speed;
+                }else
+                if (u.yPos > closestUnit.yPos)
+                {
+                    u.yPos = u.yPos - u.speed;
+                }else
+                if (u.yPos < closestUnit.yPos)
+                {
+                    u.yPos = u.yPos + u.speed;
                 }
 
 
@@ -252,7 +143,7 @@ namespace Gade_POE
 
             public void CombatHandler(Unit closestUnit, Unit u)
             {
-                closestUnit.Health -= u.attack;
+                closestUnit.Health = closestUnit.Health - u.attack;
             }
 
             public bool RangeCheck(Unit closestUnit, Unit u)
@@ -340,21 +231,25 @@ namespace Gade_POE
 
                 for (int j = 0; j < buildings.Length; j++)
                 {
-
+                    if (buildings[counter].HP   > 0)
+                    {
                         if (buildings[counter].team != u.team)
                         {
-                        distance = Math.Sqrt(Math.Pow((buildings[counter].xPos - u.xPos), 2) + Math.Pow((buildings[counter].yPos - u.yPos), 2));
-                        if (distance < smallestDist)
-                        {
-                            smallestDist = distance;
-                            closestBuilding = buildings[counter];
-                        }
-                        counter += 1;
+                            distance = Math.Sqrt(Math.Pow((buildings[counter].xPos - u.xPos), 2) + Math.Pow((buildings[counter].yPos - u.yPos), 2));
+                            if (distance < smallestDist)
+                            {
+                                smallestDist = distance;
+                                closestBuilding = buildings[counter];
+                            }
+                            counter += 1;
                         }
                         else
                         {
-                        counter += 1;
+                            counter += 1;
                         }
+
+                    }
+                       
                 }
 
                 return closestBuilding;
@@ -413,6 +308,7 @@ namespace Gade_POE
             public Unit[] units;
             public Building[] buildings;
             public int mapXSize, mapYSize;
+            public int wizardAmount;
 
             //CLASS CONSTRUCTOR
             public Map(int _unitAmount, int _buildingAmount)
@@ -437,7 +333,8 @@ namespace Gade_POE
                 }
 
                 Random rnd = new Random();
-                units = new Unit[unitAmount];
+                wizardAmount = rnd.Next(2, 6);
+                units = new Unit[unitAmount + wizardAmount];
 
                 for (int i = 0; i < unitAmount; i++)
                 {
@@ -515,6 +412,32 @@ namespace Gade_POE
                         buildings[j] = B;
                     }
                     
+                }
+
+                for (int j = 0; j < wizardAmount ; j++)
+                {
+
+                    int x = rnd.Next(0, mapXSize);
+                    int y = rnd.Next(0, mapYSize);
+                    int team = rnd.Next(0, 2);
+                    int unit = rnd.Next(0, 2);
+
+                    if (map[x, y] != '.')
+                    {
+                        for (int k = 0; k < 1000; k++)
+                        {
+                            x = rnd.Next(0, mapXSize);
+                            y = rnd.Next(0, mapYSize);
+
+                            if (map[x, y] == '.')
+                            {
+                                k = 1000;
+                            }
+                        }
+                    }
+                    Unit WizardUnit = new Unit(x, y, 10, 1, 2, 1, 3, 'W', false, "WizardUnit");
+                    map[x, y] = WizardUnit.symbol;
+                    units[unitAmount + j] = WizardUnit;
                 }
             }
 
@@ -613,6 +536,7 @@ namespace Gade_POE
                                 u.MoveToBuilding(u, closestBuilding);
                                 map.UpdatePosition(u, x, y);
                                 buildingCheck = false;
+                                u.combatCheck = false;
                             }
                         }
                         else
@@ -625,8 +549,9 @@ namespace Gade_POE
                             }
                             else
                             {
-                                u.MoveUnit(u, closestUnit);
+                                u.MoveUnit(u, closestUnit, mapXSize, mapYSize);
                                 map.UpdatePosition(u, x, y);
+                                
                             }    
                         }
 
