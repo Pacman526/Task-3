@@ -141,8 +141,21 @@ namespace Gade_POE
 
             }
 
-            public void CombatHandler(Unit closestUnit, Unit u)
+            public void CombatHandler(Unit closestUnit, Unit u, int unitAmount, Unit[] units)
             {
+
+                if (u.name == "WizardUnit")
+                {
+                    for (int i = 0; i < unitAmount ; i++)
+                    {
+                        if (units[i].xPos == u.xPos && units[i].yPos == u.yPos || units[i].xPos -1 == u.xPos && units[i].yPos == u.yPos || units[i].xPos  == u.xPos && units[i].yPos -1 == u.yPos || units[i].xPos + 1 == u.xPos && units[i].yPos == u.yPos || units[i].xPos == u.xPos && units[i].yPos + 1 == u.yPos
+                            || units[i].xPos - 1 == u.xPos && units[i].yPos -1 == u.yPos || units[i].xPos - 1 == u.xPos && units[i].yPos + 1 == u.yPos || units[i].xPos + 1 == u.xPos && units[i].yPos +1 == u.yPos || units[i].xPos + 1 == u.xPos && units[i].yPos -1 == u.yPos)
+                        {
+                            units[i].Health -= u.attack;
+                        }
+                    }
+                }
+                else
                 closestUnit.Health = closestUnit.Health - u.attack;
             }
 
@@ -503,7 +516,7 @@ namespace Gade_POE
                 buildingInfo = "";
                 if (roundCheck > 0)
                 {
-                    for (i = 0; i < units.Length; i++)
+                    for (i = 0; i < units.Length - map.wizardAmount ; i++)
                     {
                         Unit u = (Unit)units[i];
 
@@ -545,7 +558,7 @@ namespace Gade_POE
                             if (u.RangeCheck(closestUnit, u) == true)
                             {
                                 u.combatCheck = true;
-                                u.CombatHandler(closestUnit, u);
+                                u.CombatHandler(closestUnit, u, map.unitAmount, units);
                             }
                             else
                             {
@@ -583,7 +596,6 @@ namespace Gade_POE
                             }
                             
                         }
-                        
                         if (buildingType == "Form1+FactoryBuilding")
                         {
                             FactoryBuilding B = (FactoryBuilding)b;
@@ -594,6 +606,30 @@ namespace Gade_POE
                             }else
                             {
                                 B.Death(B, k, buildings);
+                            }
+                        }
+                    }
+
+                    for (int h = 0; h < map.wizardAmount; h++)
+                    {
+                        Unit u = (Unit)units[map.unitAmount + h];
+
+                        x = u.xPos;
+                        y = u.yPos;
+
+                        if ((u.Health *100/ u.maxHealth) > 50)
+                        {
+                            closestUnit = u.ClosestUnit(units, units.Length, u, buildings);
+                            if (u.RangeCheck(closestUnit, u) == true)
+                            {
+                                u.combatCheck = true;
+                                u.CombatHandler(closestUnit, u, map.unitAmount, units);
+                            }
+                            else
+                            {
+                                u.MoveUnit(u, closestUnit, mapXSize, mapYSize);
+                                map.UpdatePosition(u, x, y);
+
                             }
                         }
                     }
