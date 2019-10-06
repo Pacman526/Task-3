@@ -47,6 +47,7 @@ namespace Gade_POE
             public string info;
             public int count;
             public string name;
+            public bool buildingCheck;
 
 
             //CLASS CONSTRUCTOR
@@ -267,15 +268,18 @@ namespace Gade_POE
                 }
             }
 
-            public Unit ClosestUnit(Unit[] units, int numUnits, Unit u)
+            public Unit ClosestUnit(Unit[] units, int numUnits, Unit _u, Building [] buildings)
             {
 
                 double distance = 0;
                 int counter = 0;
                 double smallestDist;
+                Unit u = _u;
                 Unit closestUnit = u;
+                
 
                 smallestDist = 15;
+                
                 for (int j = 0; j < units.Length; j++)
                 {
                     if (units[counter].team != u.team)
@@ -293,7 +297,9 @@ namespace Gade_POE
                         counter += 1;
                     }
                 }
+
                 return closestUnit;
+                
             }
 
             public void Death(Unit[] units, int i)
@@ -303,9 +309,6 @@ namespace Gade_POE
                 {
                     units[k] = units[k + 1];
                 }
-
-
-
             }
 
             public string ToString(Unit u, Unit[] units, int i)
@@ -323,6 +326,43 @@ namespace Gade_POE
                 }
 
                 return info;
+            }
+
+
+            public Building ClosestBuilding(Unit _u, Building[] buildings )
+            {
+                double distance = 0;
+                int counter = 0;
+                double smallestDist;
+                Unit u = _u;
+                Building closestBuilding = buildings[1];
+                smallestDist = 15;
+
+                for (int j = 0; j < buildings.Length; j++)
+                {
+                    if (buildings[counter].team != u.team)
+                    {
+                        distance = Math.Sqrt(Math.Pow((buildings[counter].xPos - u.xPos), 2) + Math.Pow((buildings[counter].yPos - u.yPos), 2));
+                        if (distance < smallestDist)
+                        {
+                            smallestDist = distance;
+                            closestBuilding = buildings[counter];
+                        }
+                        counter += 1;
+                    }
+                    else
+                    {
+                        counter += 1;
+                    }
+                }
+
+                return closestBuilding;
+            }
+
+
+            public void BuildingCombat()
+            {
+
             }
 
         }
@@ -477,6 +517,7 @@ namespace Gade_POE
                 map[oldX, oldY] = '.';
             }
 
+
         }
         class GameEnigine
         {
@@ -487,19 +528,30 @@ namespace Gade_POE
             public Map map;
             public int temp;
             int mapXSize, mapYSize;
+            public bool buildingCheck;
+            Building closestBuilding;
+
 
 
             public void GameLogic(Unit[] units, Building [] buildings, int _mapXSize, int _mapYSize)
             {
                 mapXSize = _mapXSize;
                 mapYSize = _mapYSize;
-                
+
                 info = "";
                 if (roundCheck > 0)
                 {
                     for (i = 0; i < units.Length; i++)
                     {
                         Unit u = (Unit)units[i];
+
+                        for (int k = 0; k < buildings.Length; k++)
+                        {
+                            if (u.team != buildings[k].team)
+                            {
+                                buildingCheck = true;
+                            }
+                        }
 
                         x = u.xPos;
                         y = u.yPos;
@@ -508,9 +560,14 @@ namespace Gade_POE
                         {
                             u.Death(units, i);
                         }
+                        else if (buildingCheck == true)
+                        {
+                            closestBuilding = u.ClosestBuilding(u, buildings);
+                            
+                        }
                         else
                         {
-                            closestUnit = u.ClosestUnit(units, units.Length, u);
+                            closestUnit = u.ClosestUnit(units, units.Length, u, buildings);
                             if (u.RangeCheck(closestUnit, u) == true)
                             {
                                 u.combatCheck = true;
@@ -520,7 +577,6 @@ namespace Gade_POE
                             {
                                 u.MoveUnit(u, closestUnit);
                                 map.UpdatePosition(i, x, y);
-
                             }
 
                             info += u.ToString(u, units, i);
@@ -606,12 +662,12 @@ namespace Gade_POE
         abstract public class Building
         {
             //CLASS VARIABLES 
-            protected int xPos;
-            protected int yPos;
-            protected int HP;
-            protected int maxHP;
-            protected int team;
-            protected char symbol;
+            public int xPos;
+            public int yPos;
+            public int HP;
+            public int maxHP;
+            public int team;
+            public char symbol;
 
 
             //CLASS CONSTRUCTOR
