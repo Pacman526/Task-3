@@ -25,12 +25,13 @@ namespace Gade_POE
 
         public void Form1_Load(object sender, EventArgs e)
         {
-
-            map.BattlefieldCreator();
+            int mapXSize = 20;
+            int mapYSize = 20;
+            map.BattlefieldCreator(mapXSize, mapYSize);
             gameEngine.map = map;
             lblMap.Text = map.PopulateMap(map.units, map.buildings);
 
-            gameEngine.GameLogic(map.units, map.buildings);
+            gameEngine.GameLogic(map.units, map.buildings, mapXSize, mapYSize);
             
             rtbInfo.Text = gameEngine.info;
 
@@ -329,11 +330,12 @@ namespace Gade_POE
         public class Map
         {
             //CLASS VARIABLES
-            public char[,] map = new char[20, 20];
+            public char[,] map;
             public int unitAmount;
             public int buildingAmount;
             public Unit[] units;
             public Building[] buildings;
+            public int mapXSize, mapYSize;
 
             //CLASS CONSTRUCTOR
             public Map(int _unitAmount, int _buildingAmount)
@@ -343,11 +345,15 @@ namespace Gade_POE
             }
 
             //CLASS METHODS
-            public void BattlefieldCreator()
+            public void BattlefieldCreator(int _mapXSize, int _mapYSize)
             {
-                for (int i = 0; i < 20; i++)
+                mapXSize = _mapXSize;
+                mapYSize = _mapYSize;
+                map = new char[mapXSize, mapYSize];
+
+                for (int i = 0; i < mapXSize; i++)
                 {
-                    for (int k = 0; k < 20; k++)
+                    for (int k = 0; k < mapYSize; k++)
                     {
                         map[i, k] = Convert.ToChar(".");
                     }
@@ -359,8 +365,8 @@ namespace Gade_POE
                 for (int i = 0; i < unitAmount; i++)
                 {
 
-                    int x = rnd.Next(0, 20);
-                    int y = rnd.Next(0, 20);
+                    int x = rnd.Next(0, mapXSize);
+                    int y = rnd.Next(0, mapYSize);
                     int team = rnd.Next(0, 2);
                     int unit = rnd.Next(0, 2);
 
@@ -368,8 +374,8 @@ namespace Gade_POE
                     {
                         for (int k = 0; k < 1000; k++)
                         {
-                            x = rnd.Next(0, 20);
-                            y = rnd.Next(0, 20);
+                            x = rnd.Next(0, mapXSize);
+                            y = rnd.Next(0, mapYSize);
 
                             if (map[x, y] == '.')
                             {
@@ -413,8 +419,8 @@ namespace Gade_POE
 
                 for (int j = 0; j < buildings.Length; j++)
                 {
-                    int x = rnd.Next(0, 20);
-                    int y = rnd.Next(0, 20);
+                    int x = rnd.Next(0, mapXSize);
+                    int y = rnd.Next(0, mapYSize);
                     int team = rnd.Next(0, 2);
                     int buildingType = rnd.Next(0, 2);
                     
@@ -452,9 +458,9 @@ namespace Gade_POE
                     }
                 }
 
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < mapXSize; j++)
                 {
-                    for (int l = 0; l < 20; l++)
+                    for (int l = 0; l < mapYSize; l++)
                     {
                         mapLayout += map[j, l];
                     }
@@ -480,12 +486,14 @@ namespace Gade_POE
             public int x, y, i;
             public Map map;
             public int temp;
+            int mapXSize, mapYSize;
 
-            
 
-            public void GameLogic(Unit[] units, Building [] buildings)
+            public void GameLogic(Unit[] units, Building [] buildings, int _mapXSize, int _mapYSize)
             {
-
+                mapXSize = _mapXSize;
+                mapYSize = _mapYSize;
+                
                 info = "";
                 if (roundCheck > 0)
                 {
@@ -580,7 +588,7 @@ namespace Gade_POE
             gameEngine.roundCheck += 1;
             gameEngine.temp += 1;
             rtbInfo.Clear();
-            gameEngine.GameLogic(map.units , map.buildings);
+            gameEngine.GameLogic(map.units , map.buildings, map.mapXSize, map.mapYSize);
             rtbInfo.Text = gameEngine.info;
             lblMap.Text = map.PopulateMap(map.units, map.buildings);
             lblScore.Text = "Round : " + gameEngine.roundCheck;
