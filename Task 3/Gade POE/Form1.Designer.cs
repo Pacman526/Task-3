@@ -37,6 +37,7 @@
             this.Timer = new System.Windows.Forms.Timer(this.components);
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.rtbBuildingInfo = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // lblMap
@@ -51,14 +52,14 @@
             // lblScore
             // 
             this.lblScore.AutoSize = true;
-            this.lblScore.Location = new System.Drawing.Point(421, 34);
+            this.lblScore.Location = new System.Drawing.Point(54, 2);
             this.lblScore.Name = "lblScore";
             this.lblScore.Size = new System.Drawing.Size(0, 13);
             this.lblScore.TabIndex = 1;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(582, 160);
+            this.btnStart.Location = new System.Drawing.Point(649, 157);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 2;
@@ -68,7 +69,7 @@
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(582, 198);
+            this.btnPause.Location = new System.Drawing.Point(649, 197);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(75, 23);
             this.btnPause.TabIndex = 3;
@@ -79,7 +80,7 @@
             // rtbInfo
             // 
             this.rtbInfo.AccessibleRole = System.Windows.Forms.AccessibleRole.List;
-            this.rtbInfo.Location = new System.Drawing.Point(231, -1);
+            this.rtbInfo.Location = new System.Drawing.Point(339, -1);
             this.rtbInfo.Name = "rtbInfo";
             this.rtbInfo.ReadOnly = true;
             this.rtbInfo.Size = new System.Drawing.Size(149, 428);
@@ -93,7 +94,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(582, 238);
+            this.btnSave.Location = new System.Drawing.Point(649, 236);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 5;
@@ -102,18 +103,29 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(582, 276);
+            this.btnLoad.Location = new System.Drawing.Point(649, 276);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 6;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
             // 
+            // rtbBuildingInfo
+            // 
+            this.rtbBuildingInfo.AccessibleRole = System.Windows.Forms.AccessibleRole.List;
+            this.rtbBuildingInfo.Location = new System.Drawing.Point(494, -1);
+            this.rtbBuildingInfo.Name = "rtbBuildingInfo";
+            this.rtbBuildingInfo.ReadOnly = true;
+            this.rtbBuildingInfo.Size = new System.Drawing.Size(149, 428);
+            this.rtbBuildingInfo.TabIndex = 7;
+            this.rtbBuildingInfo.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(736, 439);
+            this.Controls.Add(this.rtbBuildingInfo);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.rtbInfo);
@@ -140,6 +152,7 @@
         private System.Windows.Forms.Timer Timer;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.RichTextBox rtbBuildingInfo;
     }
 }
 

@@ -32,7 +32,7 @@ namespace Gade_POE
             lblMap.Text = map.PopulateMap(map.units, map.buildings);
 
             gameEngine.GameLogic(map.units, map.buildings, mapXSize, mapYSize);
-            
+            rtbBuildingInfo.Text = gameEngine.buildingInfo;
             rtbInfo.Text = gameEngine.info;
 
         }
@@ -73,7 +73,6 @@ namespace Gade_POE
 
             }
 
-
             public void MoveUnit(Unit u, Unit closestUnit)
             {
                 for (int i = 0; i < (u.speed); i++)
@@ -88,11 +87,11 @@ namespace Gade_POE
                                 {
                                     if (u.xPos + 1 >= 20)
                                     {
-                                        u.xPos -= 1;
+                                        u.xPos =- 1;
                                     }
                                     else
                                     {
-                                        u.xPos += 1;
+                                        u.xPos =+ 1;
                                     }
                                 }
                                 else
@@ -338,10 +337,12 @@ namespace Gade_POE
                 Building closestBuilding = buildings[1];
                 smallestDist = 15;
 
+
                 for (int j = 0; j < buildings.Length; j++)
                 {
-                    if (buildings[counter].team != u.team)
-                    {
+
+                        if (buildings[counter].team != u.team)
+                        {
                         distance = Math.Sqrt(Math.Pow((buildings[counter].xPos - u.xPos), 2) + Math.Pow((buildings[counter].yPos - u.yPos), 2));
                         if (distance < smallestDist)
                         {
@@ -349,20 +350,56 @@ namespace Gade_POE
                             closestBuilding = buildings[counter];
                         }
                         counter += 1;
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
                         counter += 1;
-                    }
+                        }
                 }
 
                 return closestBuilding;
             }
 
 
-            public void BuildingCombat()
+            public void BuildingCombat(Building closestBuilding, Unit u)
+            {
+                closestBuilding.HP = closestBuilding.HP - u.attack;
+            }
+
+            public bool BuildingRangeCheck(Building closestBuilding, Unit u)
             {
 
+                if (u.attackRange >= Math.Sqrt(Math.Pow((closestBuilding.xPos - u.xPos), 2) + Math.Pow((closestBuilding.yPos - u.yPos), 2)))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public void MoveToBuilding(Unit u, Building closestBuilding)
+            {
+                if (u.xPos > closestBuilding.xPos)
+                {
+                    u.xPos = u.xPos - u.speed;
+                }
+
+                if (u.xPos < closestBuilding.xPos)
+                {
+                    u.xPos = u.xPos + u.speed;
+                }
+
+                if (u.yPos > closestBuilding.yPos)
+                {
+                    u.yPos = u.yPos - u.speed;
+                }
+
+                if (u.yPos < closestBuilding.yPos)
+                {
+                    u.yPos = u.yPos + u.speed;
+                }
             }
 
         }
@@ -467,13 +504,13 @@ namespace Gade_POE
 
                     if (buildingType == 0)
                     {
-                        ResourceBuilding B = new ResourceBuilding(x, y, 25, team, 'O');
+                        ResourceBuilding B = new ResourceBuilding(x, y, 100, team, 'O');
                         map[x, y] = B.Symbol ;
                         buildings[j] = B;
                     }
                     else if (buildingType == 1)
                     {
-                        FactoryBuilding B = new FactoryBuilding(x, y, 25, team, 'F');
+                        FactoryBuilding B = new FactoryBuilding(x, y, 100, team, 'F');
                         map[x, y] = B.Symbol;
                         buildings[j] = B;
                     }
@@ -494,7 +531,7 @@ namespace Gade_POE
                     }
                     else
                     {
-
+                        map[units[k].xPos, units[k].yPos] = '.';
                     }
                 }
 
@@ -510,10 +547,10 @@ namespace Gade_POE
                 return mapLayout;
             }
 
-            public void UpdatePosition(int i, int oldX, int oldY)
+            public void UpdatePosition(Unit u, int oldX, int oldY)
             {
 
-                map[units[i].xPos, units[i].yPos] = units[i].symbol;
+                map[u.xPos, u.yPos] =   u.symbol;
                 map[oldX, oldY] = '.';
             }
 
@@ -530,6 +567,7 @@ namespace Gade_POE
             int mapXSize, mapYSize;
             public bool buildingCheck;
             Building closestBuilding;
+            public string buildingInfo;
 
 
 
@@ -539,6 +577,7 @@ namespace Gade_POE
                 mapYSize = _mapYSize;
 
                 info = "";
+                buildingInfo = "";
                 if (roundCheck > 0)
                 {
                     for (i = 0; i < units.Length; i++)
@@ -563,7 +602,18 @@ namespace Gade_POE
                         else if (buildingCheck == true)
                         {
                             closestBuilding = u.ClosestBuilding(u, buildings);
-                            
+                            if (u.BuildingRangeCheck(closestBuilding, u) == true)
+                            {
+                                u.combatCheck = true;
+                                u.BuildingCombat(closestBuilding, u);
+                                buildingCheck = false;
+                            }
+                            else
+                            {
+                                u.MoveToBuilding(u, closestBuilding);
+                                map.UpdatePosition(u, x, y);
+                                buildingCheck = false;
+                            }
                         }
                         else
                         {
@@ -576,11 +626,11 @@ namespace Gade_POE
                             else
                             {
                                 u.MoveUnit(u, closestUnit);
-                                map.UpdatePosition(i, x, y);
-                            }
-
-                            info += u.ToString(u, units, i);
+                                map.UpdatePosition(u, x, y);
+                            }    
                         }
+
+                        info += u.ToString(u, units, i);
                     }
 
                     for (int k = 0; k < buildings.Length; k++)
@@ -590,34 +640,35 @@ namespace Gade_POE
                         string[] buildArr = buildingType.Split('.');
                         buildingType = buildArr[buildArr.Length - 1];
 
-                        if (buildingType == "ResourceBuilding")
+                        if (buildingType == "Form1+ResourceBuilding")
                         {
                             ResourceBuilding B = (ResourceBuilding)b;
-
-                            if (B.HP < 0)
+                            if (B.HP > 0)
                             {
-                                B.Death(B);
-                            }else
-                            {
-                                info += B.ToString(buildings, B);
+                                buildingInfo += B.ToString(buildings, B);
                                 if (temp > 4)
                                 {
                                     temp = 4;
                                     B.GenerateResources();
                                 }
                             }
+                            else
+                            {
+                                B.Death(B, k,buildings);
+                            }
                             
                         }
                         
-                        if (buildingType == "FactoryBuilding")
+                        if (buildingType == "Form1+FactoryBuilding")
                         {
                             FactoryBuilding B = (FactoryBuilding)b;
-                            if (B.HP < 0)
+                            if (B.HP > 0)
                             {
-                                B.Death(B);
+                                buildingInfo += B.ToString(buildings, B);
+                                
                             }else
                             {
-                                info += B.ToString(buildings, B);
+                                B.Death(B, k, buildings);
                             }
                         }
                     }
@@ -628,6 +679,26 @@ namespace Gade_POE
                     {
                         Unit u = (Unit)units[i];
                         info += u.ToString(u, units, i);
+                    }
+
+                    for (int k = 0; k < buildings.Length; k++)
+                    {
+                        Building b = buildings[k];
+                        string buildingType = b.GetType().ToString();
+                        string[] buildArr = buildingType.Split('.');
+                        buildingType = buildArr[buildArr.Length - 1];
+
+                        if (buildingType == "Form1+ResourceBuilding")
+                        {
+                            ResourceBuilding B = (ResourceBuilding)b;
+                            buildingInfo += B.ToString(buildings, B);
+                        }
+
+                        if (buildingType == "Form1+FactoryBuilding")
+                        {
+                            FactoryBuilding B = (FactoryBuilding)b;
+                            buildingInfo += B.ToString(buildings, B);
+                        }
                     }
                 }
             }
@@ -646,8 +717,10 @@ namespace Gade_POE
             rtbInfo.Clear();
             gameEngine.GameLogic(map.units , map.buildings, map.mapXSize, map.mapYSize);
             rtbInfo.Text = gameEngine.info;
+            rtbBuildingInfo.Text = gameEngine.buildingInfo;
             lblMap.Text = map.PopulateMap(map.units, map.buildings);
             lblScore.Text = "Round : " + gameEngine.roundCheck;
+            
 
         }
 
@@ -683,7 +756,7 @@ namespace Gade_POE
 
             //CLASS METHODS
             public abstract void save();
-            public abstract void Death(Building b);
+            public abstract void Death(Building b, int k, Building[] buildings);
             public abstract string ToString(Building[] buildings, Building b);     
         }
     
@@ -709,9 +782,13 @@ namespace Gade_POE
             public char Symbol { get => base.symbol; set => base.symbol = value; }
 
             //CLASS METHODS
-            public override void Death(Building B)
+            public override void Death(Building B,int k, Building[] buildings)
             {
-                
+                for (int i = k; i < buildings.Length - 1; i++)
+                {
+                    buildings[i] = buildings[i + 1];
+                }
+
             }
 
             public override void save()
@@ -728,7 +805,7 @@ namespace Gade_POE
 
             public override string ToString(Building [] buildings, Building b)
             {
-                string info = "ResourceBuidling " + "\n" + "____________" + "\n" + "HP : " + this.HP + "\n" + "Team : " + this.team + "\n" + "Symbol : " + this.symbol;
+                string info = "ResourceBuidling " + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" + "Team : " + b.team + "\n" + "Symbol : " + b.symbol + "\n" + "\n";
                 return info;
             }
         }
@@ -757,7 +834,7 @@ namespace Gade_POE
             public int ProductionSpeed { get => productionSpeed; }
             
             //CLASS METHODS
-            public override void Death(Building B)
+            public override void Death(Building B, int k, Building[] buildings)
             {
                 if (this.HP < 0)
                 {
@@ -795,7 +872,7 @@ namespace Gade_POE
             }
             public override string ToString(Building[] buildings, Building b)
             {
-                string info = "FactoryBuilding " + "\n" + "____________" + "\n" + "HP : " + this.HP + "\n" +  "Team : "+ this.team + "\n" + "Symbol : " + this.symbol;
+                string info = "FactoryBuilding " + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" +  "Team : "+ b.team + "\n" + "Symbol : " + b.symbol + "\n"+ "\n";
                 return info;
             }
         }
