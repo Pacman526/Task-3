@@ -26,10 +26,12 @@ namespace Gade_POE
             //CLASS METHODS
             public void BattlefieldCreator(int _mapXSize, int _mapYSize)
             {
+                //sets the map size
                 mapXSize = _mapXSize;
                 mapYSize = _mapYSize;
                 map = new char[mapXSize, mapYSize];
 
+                //fills battlefield with grass
                 for (int i = 0; i < mapXSize; i++)
                 {
                     for (int k = 0; k < mapYSize; k++)
@@ -37,7 +39,7 @@ namespace Gade_POE
                         map[i, k] = Convert.ToChar(".");
                     }
                 }
-
+                //randoms a wizard amount
                 Random rnd = new Random();
                 wizardAmount = rnd.Next(2, 6);
                 units = new Unit[unitAmount];
@@ -45,12 +47,13 @@ namespace Gade_POE
 
                 for (int i = 0; i < unitAmount; i++)
                 {
-
+                    //random values for the map
                     int x = rnd.Next(0, mapXSize);
                     int y = rnd.Next(0, mapYSize);
                     int team = rnd.Next(0, 2);
                     int unit = rnd.Next(0, 2);
-
+                    
+                    //checks that unit spawns in a spot with grass
                     if (map[x, y] != '.')
                     {
                         for (int k = 0; k < 1000; k++)
@@ -65,6 +68,7 @@ namespace Gade_POE
                         }
                     }
 
+                    //spawns units
                     if (unit == 1 & team == 0)
                     {
                         Unit RangedUnit = new Unit(x, y, 10, 1, 3, 5, team, Convert.ToChar("R"), false, "RangedUnit");
@@ -97,7 +101,7 @@ namespace Gade_POE
 
                 buildings = new Building[buildingAmount];
                 
-
+                //spawn buildings
                 for (int j = 0; j < buildings.Length; j++)
                 {
                     int x = rnd.Next(0, mapXSize);
@@ -121,6 +125,7 @@ namespace Gade_POE
                     
                 }
 
+                //spawn wizards
                 for (int j = 0; j < wizards.Length ; j++)
                 {
 
@@ -142,6 +147,7 @@ namespace Gade_POE
                             }
                         }
                     }
+                    //creates wizard and puts it in wizard array
                     Unit WizardUnit = new Unit(x, y, 10, 1, 2, 1, 3, 'W', false, "WizardUnit");
                     map[x, y] = WizardUnit.symbol;
                     wizards[j] = WizardUnit;
@@ -151,7 +157,7 @@ namespace Gade_POE
             public string PopulateMap(Unit[] units, Building[] buildings)
             {
                 string mapLayout = "";
-
+                //populates the map with the units
                 for (int k = 0; k < units.Length; k++)
                 {
 
@@ -164,7 +170,7 @@ namespace Gade_POE
                         map[units[k].xPos, units[k].yPos] = '.';
                     }
                 }
-
+                //creates a map string
                 for (int j = 0; j < mapXSize; j++)
                 {
                     for (int l = 0; l < mapYSize; l++)
@@ -173,13 +179,13 @@ namespace Gade_POE
                     }
                     mapLayout = mapLayout + "\n";
                 }
-
+                //return map string
                 return mapLayout;
             }
 
             public void UpdatePosition(Unit u, int oldX, int oldY)
             {
-
+                //updates a spesific unit on the map
                 map[u.xPos, u.yPos] =   u.symbol;
                 map[oldX, oldY] = '.';
             }

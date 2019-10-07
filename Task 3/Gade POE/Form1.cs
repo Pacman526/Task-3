@@ -42,7 +42,7 @@ namespace Gade_POE
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            //starts timer
+            //starts timers
             Timer.Enabled = true;
             Timer.Start();
         }

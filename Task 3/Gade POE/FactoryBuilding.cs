@@ -17,7 +17,7 @@ namespace Gade_POE
             {
                 
             }
-
+            //Class Accessors
             public int XPos { get => base.xPos; set => base.xPos = value; }
             public int YPos { get => base.yPos; set => base.yPos = value; }
             public int HP { get => base.HP; set =>base. HP = value; }
@@ -30,6 +30,7 @@ namespace Gade_POE
             //CLASS METHODS
             public override void Death(Building B, int k, Building[] buildings)
             {
+                //when a building is destroyed
                 if (this.HP < 0)
                 {
                     
@@ -43,6 +44,7 @@ namespace Gade_POE
 
             public Unit SpawnUnit(FactoryBuilding B)
             {
+                //spawns units
                 spawnPointX = B.xPos;
                 spawnPointY = B.yPos + 1;
 
@@ -68,6 +70,8 @@ namespace Gade_POE
             }
             public override string ToString(Building[] buildings, Building b)
             {
+            
+                //string with building info
                 string info = "FactoryBuilding " + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" +  "Team : "+ b.team + "\n" + "Symbol : " + b.symbol + "\n"+ "\n";
                 return info;
             }

@@ -38,6 +38,7 @@
 
             public void GenerateResources()
             {
+                //generates resources
                 resourceType = "WOOD";
                 resourcesGenerated += generatedPerRound;
                 remainingResources -= generatedPerRound;
@@ -45,6 +46,7 @@
 
             public override string ToString(Building [] buildings, Building b)
             {
+                //creates string with building info
                 string info = "ResourceBuidling" + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" + "Team : " + b.team + "\n" + "Symbol : " + b.symbol + "\n" + "\n";
                 return info;
             }
