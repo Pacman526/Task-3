@@ -324,6 +324,7 @@ namespace Gade_POE
             public Unit[] units;
             public Building[] buildings;
             public int mapXSize, mapYSize;
+            public Unit[] wizards;
             public int wizardAmount;
 
             //CLASS CONSTRUCTOR
@@ -350,7 +351,8 @@ namespace Gade_POE
 
                 Random rnd = new Random();
                 wizardAmount = rnd.Next(2, 6);
-                units = new Unit[unitAmount + wizardAmount];
+                units = new Unit[unitAmount];
+                wizards = new Unit[wizardAmount];
 
                 for (int i = 0; i < unitAmount; i++)
                 {
@@ -430,7 +432,7 @@ namespace Gade_POE
                     
                 }
 
-                for (int j = 0; j < wizardAmount ; j++)
+                for (int j = 0; j < wizards.Length ; j++)
                 {
 
                     int x = rnd.Next(0, mapXSize);
@@ -453,7 +455,7 @@ namespace Gade_POE
                     }
                     Unit WizardUnit = new Unit(x, y, 10, 1, 2, 1, 3, 'W', false, "WizardUnit");
                     map[x, y] = WizardUnit.symbol;
-                    units[unitAmount + j] = WizardUnit;
+                    wizards[j] = WizardUnit;
                 }
             }
 
@@ -519,7 +521,7 @@ namespace Gade_POE
                 buildingInfo = "";
                 if (roundCheck > 0)
                 {
-                    for (i = 0; i < units.Length - map.wizardAmount ; i++)
+                    for (i = 0; i < units.Length; i++)
                     {
                         Unit u = (Unit)units[i];
 
@@ -620,6 +622,13 @@ namespace Gade_POE
                             FactoryBuilding B = (FactoryBuilding)b;
                             if (B.HP > 0)
                             {
+                                decimal d = roundCheck;
+                                if ((d / 5) % 1 == 0)
+                                {
+
+                                    Array.Resize(ref units, units.Length + 1);
+                                    units[units.Length - 1] = B.SpawnUnit();
+                                }
                                 buildingInfo += B.ToString(buildings, B);
                                 
                             }else
@@ -629,9 +638,9 @@ namespace Gade_POE
                         }
                     }
 
-                    for (int h = 0; h < map.wizardAmount; h++)
+                    for (int h = 0; h < map.wizards.Length; h++)
                     {
-                        Unit u = (Unit)units[map.unitAmount + h];
+                        Unit u = (Unit)map.wizards[h];
 
                         x = u.xPos;
                         y = u.yPos;
