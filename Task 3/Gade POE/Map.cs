@@ -108,13 +108,13 @@ namespace Gade_POE
 
                     if (buildingType == 0)
                     {
-                        ResourceBuilding B = new ResourceBuilding(x, y, 100, team, 'O');
+                        ResourceBuilding B = new ResourceBuilding(x, y, 50, team, 'O');
                         map[x, y] = B.Symbol ;
                         buildings[j] = B;
                     }
                     else if (buildingType == 1)
                     {
-                        FactoryBuilding B = new FactoryBuilding(x, y, 100, team, 'F');
+                        FactoryBuilding B = new FactoryBuilding(x, y, 50, team, 'F');
                         map[x, y] = B.Symbol;
                         buildings[j] = B;
                     }

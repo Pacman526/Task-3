@@ -21,13 +21,16 @@ namespace Gade_POE
 
             public void GameLogic(Unit[] units, Building [] buildings, int _mapXSize, int _mapYSize)
             {
+                //max map x and y size
                 mapXSize = _mapXSize;
                 mapYSize = _mapYSize;
 
                 info = "";
                 buildingInfo = "";
+                //check so its not the first round
                 if (roundCheck > 0)
                 {
+                    
                     for (i = 0; i < units.Length; i++)
                     {
                         Unit u = (Unit)units[i];
@@ -139,8 +142,8 @@ namespace Gade_POE
                                 }
 
                                 buildingInfo += B.ToString(buildings, B);
-                                
-                            }else
+                            }
+                            else
                             {
                                 B.Death(B, k, buildings);
                             }

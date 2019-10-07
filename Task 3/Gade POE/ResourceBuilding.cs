@@ -24,10 +24,10 @@
             //CLASS METHODS
             public override void Death(Building B,int k, Building[] buildings)
             {
-                for (int i = k; i < buildings.Length - 1; i++)
-                {
-                    buildings[i] = buildings[i + 1];
-                }
+                //for (int i = k; i < buildings.Length - 1; i++)
+                //{
+                    //buildings[i] = buildings[i + 1];
+                //}
 
             }
 
