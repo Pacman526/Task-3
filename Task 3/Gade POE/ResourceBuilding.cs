@@ -45,7 +45,7 @@
 
             public override string ToString(Building [] buildings, Building b)
             {
-                string info = "ResourceBuidling " + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" + "Team : " + b.team + "\n" + "Symbol : " + b.symbol + "\n" + "\n";
+                string info = "ResourceBuidling" + "\n" + "____________" + "\n" + "HP : " + b.HP + "\n" + "Team : " + b.team + "\n" + "Symbol : " + b.symbol + "\n" + "\n";
                 return info;
             }
         }

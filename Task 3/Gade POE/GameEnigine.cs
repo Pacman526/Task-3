@@ -106,7 +106,7 @@ namespace Gade_POE
                         string[] buildArr = buildingType.Split('.');
                         buildingType = buildArr[buildArr.Length - 1];
 
-                        if (buildingType == "Form1+ResourceBuilding")
+                        if (buildingType == "ResourceBuilding")
                         {
                             ResourceBuilding B = (ResourceBuilding)b;
                             if (B.HP > 0)
@@ -124,18 +124,20 @@ namespace Gade_POE
                             }
                             
                         }
-                        if (buildingType == "Form1+FactoryBuilding")
+                        if (buildingType == "FactoryBuilding")
                         {
                             FactoryBuilding B = (FactoryBuilding)b;
+                            B.productionSpeed = 5;
                             if (B.HP > 0)
                             {
                                 decimal d = roundCheck;
-                                if ((d / 5) % 1 == 0)
+                                if ((d / B.productionSpeed) % 1 == 0)
                                 {
 
                                     Array.Resize(ref units, units.Length + 1);
-                                    units[units.Length - 1] = B.SpawnUnit();
+                                    units[units.Length - 1] = B.SpawnUnit(B);
                                 }
+
                                 buildingInfo += B.ToString(buildings, B);
                                 
                             }else
@@ -189,13 +191,13 @@ namespace Gade_POE
                         string[] buildArr = buildingType.Split('.');
                         buildingType = buildArr[buildArr.Length - 1];
 
-                        if (buildingType == "Form1+ResourceBuilding")
+                        if (buildingType == "ResourceBuilding")
                         {
                             ResourceBuilding B = (ResourceBuilding)b;
                             buildingInfo += B.ToString(buildings, B);
                         }
 
-                        if (buildingType == "Form1+FactoryBuilding")
+                        if (buildingType == "FactoryBuilding")
                         {
                             FactoryBuilding B = (FactoryBuilding)b;
                             buildingInfo += B.ToString(buildings, B);

@@ -10,6 +10,7 @@ namespace Gade_POE
             public int unitType;
             public int productionSpeed;
             public int spawnPointX, spawnPointY;
+            Unit u;
 
             //CLASS CONSTRUCTOR
             public FactoryBuilding(int _xPos, int _yPos, int _HP, int _team, char _symbol) : base(_xPos, _yPos, _HP, _team, _symbol)
@@ -40,11 +41,13 @@ namespace Gade_POE
 
             }
 
-            public Unit SpawnUnit()
+            public Unit SpawnUnit(FactoryBuilding B)
             {
-                spawnPointX = xPos;
-                spawnPointY = YPos + 1;
-                Unit u = new Unit(0, 0, 0, 0, 0, 0, 0, '0', false, "Unit");
+                spawnPointX = B.xPos;
+                spawnPointY = B.yPos + 1;
+
+                Random rnd = new Random();
+                unitType = rnd.Next(0, 2);
 
                 if (spawnPointY > 20)
                 {
